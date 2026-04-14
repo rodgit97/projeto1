@@ -571,18 +571,18 @@ app.delete("/book/:id", (req, res) => {
 
 app.put("/book/:id/comment", (req, res) => {
   const { id } = req.params;
-  const { user, text} = req.body;
- 
+  const { user, text } = req.body;
+
   if (!user || !text) {
     return res.status(400).json({
-      error: "Campos obrigatórios em falta",
+      error: "Campos obrigatorios em falta",
       required: ["user", "text"],
-      example: '{"user": "João", "text": "Excelente livro!"}',
+      example: '{user: "João", text: "Excelente livro!"}',
     });
   }
- 
+
   const query1 = "SELECT * FROM book WHERE id = ?";
- 
+
   connection.query(query1, [id], (err, rows) => {
     if (err) {
       console.error("Erro:", err.message);
@@ -591,16 +591,16 @@ app.put("/book/:id/comment", (req, res) => {
         details: err.message,
       });
     }
- 
+
     if (rows.length === 0) {
       return res.status(404).json({
         error: "Livro não encontrado",
         id: id,
       });
     }
- 
+
     const book = rows[0];
- 
+
     let array = [];
     try {
       const parsed = JSON.parse(book.comment || "[]");
@@ -608,29 +608,29 @@ app.put("/book/:id/comment", (req, res) => {
     } catch (e) {
       array = [];
     }
- 
+
     const newComment = {
       user: user,
-      text: text
+      text: text,
     };
- 
+
     array.push(newComment);
- 
+
     const updatedComments = JSON.stringify(array);
- 
+
     const query2 = "UPDATE book SET comment = ? WHERE id = ?";
- 
+
     connection.query(query2, [updatedComments, id], (err, result) => {
       if (err) {
         console.error("Erro:", err.message);
         return res.status(500).json({
-          error: "Erro ao atualizar comentário",
+          error: "erro ao atualizar comentario",
           details: err.message,
         });
       }
- 
+
       res.status(200).json({
-        message: "Comentário adicionado com sucesso",
+        message: "Comentario adicionado com sucesso",
         bookId: id,
         bookTitle: book.title,
         newComment: newComment,
