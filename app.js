@@ -407,7 +407,7 @@ app.get("/book/genre/:genre", (req, res) => {
 //parteA d
 
 app.put("/book/:id/discount", (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   const discount = req.query.value;
 
   if (!discount || isNaN(discount) || discount <= 0 || discount >= 100) {
